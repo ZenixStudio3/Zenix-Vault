@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENIX Studio - AE Assets & SFX Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff1a1a;
+            --primary-hover: #e60000;
+            --bg-dark: #0a0a0c;
+            --card-bg: #121216;
+            --border-color: rgba(255, 26, 26, 0.2);
+        }
+        body {
+            background-color: var(--bg-dark);
+            color: #f3f4f6;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: all 0.3s ease;
+        }
+        .theme-red { --primary: #ff1a1a; --primary-hover: #e60000; --border-color: rgba(255, 26, 26, 0.25); }
+        .theme-blue { --primary: #00d2ff; --primary-hover: #00a0cc; --border-color: rgba(0, 210, 255, 0.25); }
+        .theme-emerald { --primary: #10b981; --primary-hover: #059669; --border-color: rgba(16, 185, 129, 0.25); }
+        .theme-purple { --primary: #a855f7; --primary-hover: #9333ea; --border-color: rgba(168, 85, 247, 0.25); }
+        .theme-amber { --primary: #f59e0b; --primary-hover: #d97706; --border-color: rgba(245, 158, 11, 0.25); }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #fff;
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        .border-theme { border-color: var(--border-color); }
+        .text-theme { color: var(--primary); }
+        .bg-theme-glow { box-shadow: 0 0 25px rgba(255, 26, 26, 0.15); }
+        .bg-theme { background-color: var(--primary); }
+
+        /* Preview Animations */
+        @keyframes popAnim {
+            0% { transform: scale(0.8); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        .animate-pop { animation: popAnim 1.5s infinite ease-in-out; }
+
+        @keyframes fadeAnim {
+            0% { opacity: 0.1; }
+            50% { opacity: 1; }
+            100% { opacity: 0.1; }
+        }
+        .animate-fade { animation: fadeAnim 2s infinite ease-in-out; }
+
+        @keyframes transAnim {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
+        }
+        .animate-trans { animation: transAnim 2s infinite linear; }
+
+        /* Audio Equalizer Bars */
+        .eq-bar {
+            width: 4px;
+            height: 24px;
+            background-color: var(--primary);
+            border-radius: 2px;
+            animation: eqAnim 1.2s infinite ease-in-out alternate;
+        }
+        .eq-bar:nth-child(1) { animation-delay: 0.1s; }
+        .eq-bar:nth-child(2) { animation-delay: 0.3s; }
+        .eq-bar:nth-child(3) { animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { animation-delay: 0.4s; }
+        .eq-bar:nth-child(5) { animation-delay: 0.15s; }
+
+        @keyframes eqAnim {
+            0% { height: 6px; }
+            100% { height: 28px; }
+        }
+    </style>
+</head>
+<body class="theme-red min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-theme bg-black/40 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-theme-glow flex items-center justify-center text-xl font-black text-theme border border-theme">
+                Z
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wider">ZENIX <span class="text-theme">.VFX</span></h1>
+                <p class="text-xs text-gray-400">AE ASSETS & SFX ENGINE</p>
+            </div>
+        </div>
+
+        <!-- Theme Switcher -->
+        <div class="flex items-center space-x-3 bg-gray-900/80 p-2 rounded-full border border-gray-800">
+            <span class="text-xs text-gray-400 pl-2 font-medium">Theme:</span>
+            <button onclick="setTheme('theme-red')" class="w-5 h-5 rounded-full bg-red-600 hover:scale-110 transition"></button>
+            <button onclick="setTheme('theme-blue')" class="w-5 h-5 rounded-full bg-cyan-400 hover:scale-110 transition"></button>
+            <button onclick="setTheme('theme-emerald')" class="w-5 h-5 rounded-full bg-emerald-500 hover:scale-110 transition"></button>
+            <button onclick="setTheme('theme-purple')" class="w-5 h-5 rounded-full bg-purple-500 hover:scale-110 transition"></button>
+            <button onclick="setTheme('theme-amber')" class="w-5 h-5 rounded-full bg-amber-500 hover:scale-110 transition"></button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-8">
+        
+        <!-- Upload Zone -->
+        <section class="border-2 border-dashed border-theme rounded-2xl p-8 text-center bg-gray-900/30 hover:bg-gray-900/50 transition">
+            <i class="fa-solid fa-cloud-arrow-up text-4xl text-theme mb-3"></i>
+            <h3 class="text-lg font-semibold">Drag & Drop Presets, FX or SFX Audio</h3>
+            <p class="text-xs text-gray-400 mt-1 mb-4">Supports .ffx, .cube, .aep, .wav, .mp3 files with auto-preview</p>
+            <label class="btn-primary px-6 py-2.5 rounded-lg font-medium cursor-pointer inline-flex items-center space-x-2">
+                <i class="fa-solid fa-plus"></i>
+                <span>Select Files to Upload</span>
+                <input type="file" id="fileInput" multiple onchange="handleFileUpload(event)" class="hidden">
+            </label>
+        </section>
+
+        <!-- Category Nav -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-800 pb-4">
+            <div class="flex flex-wrap gap-2" id="categoryNav">
+                <button onclick="switchCategory('cc')" id="nav-cc" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-theme bg-theme text-white">Color Correction</button>
+                <button onclick="switchCategory('text-anim')" id="nav-text-anim" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-gray-800 text-gray-400 hover:text-white">Text Animations</button>
+                <button onclick="switchCategory('text-fx')" id="nav-text-fx" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-gray-800 text-gray-400 hover:text-white">Text Effects</button>
+                <button onclick="switchCategory('transitions')" id="nav-transitions" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-gray-800 text-gray-400 hover:text-white">Transitions</button>
+                <button onclick="switchCategory('sfx')" id="nav-sfx" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-gray-800 text-gray-400 hover:text-white">SFX Library</button>
+            </div>
+            
+            <button onclick="clearCurrentCategory()" class="text-xs text-red-400 hover:text-red-300 flex items-center space-x-1">
+                <i class="fa-solid fa-trash"></i>
+                <span>Clear Section</span>
+            </button>
+        </div>
+
+        <!-- SFX Sub-Folders (All SFX button removed) -->
+        <div id="sfxFolderNav" class="hidden flex flex-wrap gap-2 p-3 bg-black/40 rounded-xl border border-gray-800">
+            <span class="text-xs text-gray-400 self-center mr-2"><i class="fa-solid fa-folder-open text-theme mr-1"></i> SFX Folders:</span>
+            <button onclick="filterSfxFolder('Whoosh')" id="sfx-Whoosh" class="sfx-folder-btn px-3 py-1 rounded-md text-xs bg-theme text-white font-medium">Whooshes</button>
+            <button onclick="filterSfxFolder('Impact')" id="sfx-Impact" class="sfx-folder-btn px-3 py-1 rounded-md text-xs bg-gray-800 text-gray-300 hover:text-white">Impacts & Booms</button>
+            <button onclick="filterSfxFolder('Riser')" id="sfx-Riser" class="sfx-folder-btn px-3 py-1 rounded-md text-xs bg-gray-800 text-gray-300 hover:text-white">Risers & Tension</button>
+            <button onclick="filterSfxFolder('UI')" id="sfx-UI" class="sfx-folder-btn px-3 py-1 rounded-md text-xs bg-gray-800 text-gray-300 hover:text-white">UI & Clicks</button>
+        </div>
+
+        <!-- Asset Grid Display -->
+        <div id="assetsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    </main>
+
+    <script>
+        let state = {
+            activeCategory: 'cc',
+            activeSfxFolder: 'Whoosh', // Default to Whoosh instead of all
+            assets: []
+        };
+
+        function setTheme(themeClass) {
+            document.body.className = `${themeClass} min-h-screen flex flex-col`;
+        }
+
+        function switchCategory(cat) {
+            state.activeCategory = cat;
+            state.activeSfxFolder = 'Whoosh';
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-gray-800 text-gray-400 hover:text-white';
+            });
+            document.getElementById(`nav-${cat}`).className = 'nav-btn px-4 py-2 rounded-lg text-sm font-medium border border-theme bg-theme text-white';
+
+            const sfxNav = document.getElementById('sfxFolderNav');
+            if (cat === 'sfx') {
+                sfxNav.classList.remove('hidden');
+                resetSfxFolderButtons();
+            } else {
+                sfxNav.classList.add('hidden');
+            }
+
+            renderGrid();
+        }
+
+        function resetSfxFolderButtons() {
+            document.querySelectorAll('.sfx-folder-btn').forEach(btn => {
+                btn.className = 'sfx-folder-btn px-3 py-1 rounded-md text-xs bg-gray-800 text-gray-300 hover:text-white';
+            });
+            const activeBtn = document.getElementById(`sfx-${state.activeSfxFolder}`);
+            if (activeBtn) {
+                activeBtn.className = 'sfx-folder-btn px-3 py-1 rounded-md text-xs bg-theme text-white font-medium';
+            }
+        }
+
+        function filterSfxFolder(folderName) {
+            state.activeSfxFolder = folderName;
+            resetSfxFolderButtons();
+            renderGrid();
+        }
+
+        async function analyzeAudioAndCategorize(file) {
+            return new Promise((resolve) => {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const reader = new FileReader();
+
+                reader.onload = async (e) => {
+                    try {
+                        const buffer = await audioCtx.decodeAudioData(e.target.result);
+                        const duration = buffer.duration;
+                        const data = buffer.getChannelData(0);
+                        
+                        let maxAmp = 0;
+                        let totalAmp = 0;
+                        for (let i = 0; i < data.length; i++) {
+                            const val = Math.abs(data[i]);
+                            if (val > maxAmp) maxAmp = val;
+                            totalAmp += val;
+                        }
+                        const avgAmp = totalAmp / data.length;
+                        const crestFactor = maxAmp / (avgAmp || 1);
+
+                        let folder = 'Whoosh';
+                        if (duration < 0.8 && crestFactor > 8) {
+                            folder = 'UI';
+                        } else if (crestFactor > 12 && maxAmp > 0.7) {
+                            folder = 'Impact';
+                        } else if (duration > 2.0) {
+                            folder = 'Riser';
+                        }
+                        resolve(folder);
+                    } catch (err) {
+                        resolve('Whoosh');
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        async function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+
+            for (let file of files) {
+                let category = state.activeCategory;
+                let sfxFolder = null;
+                const fileExt = file.name.split('.').pop().toLowerCase();
+
+                if (['wav', 'mp3', 'aac', 'ogg'].includes(fileExt)) {
+                    category = 'sfx';
+                    sfxFolder = await analyzeAudioAndCategorize(file);
+                } else if (fileExt === 'cube') {
+                    category = 'cc';
+                }
+
+                const fileUrl = URL.createObjectURL(file);
+                state.assets.push({
+                    id: Date.now() + Math.random().toString(36).substr(2, 4),
+                    name: file.name,
+                    category: category,
+                    sfxFolder: sfxFolder,
+                    size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+                    url: fileUrl,
+                    date: new Date().toLocaleDateString()
+                });
+            }
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('assetsGrid');
+            grid.innerHTML = '';
+
+            let filtered = state.assets.filter(a => a.category === state.activeCategory);
+
+            if (state.activeCategory === 'sfx') {
+                filtered = filtered.filter(a => a.sfxFolder === state.activeSfxFolder);
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center border border-dashed border-gray-800 rounded-xl bg-black/20">
+                        <i class="fa-solid fa-folder-open text-4xl text-gray-600 mb-3"></i>
+                        <p class="text-sm font-medium text-gray-400">Is section me abhi koi files nahi hain.</p>
+                        <p class="text-xs text-gray-500 mt-1">Upar Upload button ya drag & drop se file add karein!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(asset => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-900/70 border border-gray-800 hover:border-theme rounded-xl overflow-hidden flex flex-col justify-between transition group shadow-lg";
+
+                let previewHtml = '';
+                if (asset.category === 'cc') {
+                    previewHtml = `
+                        <div class="h-28 w-full bg-gradient-to-r from-orange-900/40 via-cyan-900/40 to-purple-900/40 relative flex items-center justify-center overflow-hidden border-b border-gray-800">
+                            <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
+                            <span class="relative z-10 text-xs font-bold px-3 py-1 rounded bg-black/60 border border-theme text-theme tracking-wider">LUT / CC PREVIEW</span>
+                        </div>
+                    `;
+                } else if (asset.category === 'text-anim') {
+                    previewHtml = `
+                        <div class="h-28 w-full bg-black/60 relative flex items-center justify-center overflow-hidden border-b border-gray-800">
+                            <span class="text-lg font-black text-theme animate-pop tracking-widest">ZENIX TEXT</span>
+                        </div>
+                    `;
+                } else if (asset.category === 'text-fx') {
+                    previewHtml = `
+                        <div class="h-28 w-full bg-black/60 relative flex items-center justify-center overflow-hidden border-b border-gray-800">
+                            <span class="text-lg font-bold text-gray-100 animate-fade tracking-wide">GLOW & SHADOW</span>
+                        </div>
+                    `;
+                } else if (asset.category === 'transitions') {
+                    previewHtml = `
+                        <div class="h-28 w-full bg-black/60 relative flex items-center justify-center overflow-hidden border-b border-gray-800">
+                            <div class="absolute w-full h-full bg-theme/20 animate-trans"></div>
+                            <span class="relative z-10 text-xs font-bold text-white tracking-widest">WIPE / ZOOM FX</span>
+                        </div>
+                    `;
+                } else if (asset.category === 'sfx') {
+                    previewHtml = `
+                        <div class="h-28 w-full bg-black/80 relative flex flex-col items-center justify-center p-3 border-b border-gray-800">
+                            <div class="flex items-end justify-center space-x-1.5 h-8 mb-2">
+                                <div class="eq-bar"></div>
+                                <div class="eq-bar"></div>
+                                <div class="eq-bar"></div>
+                                <div class="eq-bar"></div>
+                                <div class="eq-bar"></div>
+                            </div>
+                            <audio controls src="${asset.url}" class="w-full h-8 rounded bg-gray-900"></audio>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        ${previewHtml}
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] uppercase font-bold text-theme bg-theme/10 px-2 py-0.5 rounded border border-theme">
+                                    ${asset.category}
+                                </span>
+                                <div class="flex items-center space-x-2">
+                                    ${asset.sfxFolder ? `<span class="text-[10px] bg-gray-800 text-gray-300 px-2 py-0.5 rounded border border-gray-700">${asset.sfxFolder}</span>` : ''}
+                                    <span class="text-[10px] text-gray-500">${asset.size}</span>
+                                </div>
+                            </div>
+                            <h4 class="text-sm font-medium truncate text-gray-200 group-hover:text-white" title="${asset.name}">${asset.name}</h4>
+                            <p class="text-[11px] text-gray-500 mt-1">Added: ${asset.date}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 pt-0">
+                        <a href="${asset.url}" download="${asset.name}" class="btn-primary w-full py-2.5 rounded-lg text-xs font-semibold text-center flex items-center justify-center space-x-2 shadow">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Download Asset</span>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function clearCurrentCategory() {
+            state.assets = state.assets.filter(a => a.category !== state.activeCategory);
+            renderGrid();
+        }
+
+        renderGrid();
+    </script>
+</body>
+</html>
